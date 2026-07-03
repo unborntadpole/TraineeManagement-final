@@ -1,0 +1,63 @@
+Error handling feedback arrangement 	[done]
+Replacing string -> Enum		[done]
+Server side error codes			[done]
+Put vs patch
+Custom email validation 		[done]
+
+
+services that use fluent validation how do they handle frontend	[done]
+simplify trainee request dto and validation classes into one	[done]
+simplify the result object to return 2 fields			        [done]
+data annotation custom email validation				            [done]
+
+
+data validation for relational data like Foreign keys		[]
+
+foreign key remove from parent 					            [done]
+sql increment logic what it does when id already there - 	[it continues after the last one when a custom id is added]
+ef core and sql							                    [done]
+one to many for reviews and submissions				        [done]
+exeption handler class						                [done]
+must not empty sequence in validator -				        [both run together. can directly remove not empty]
+swagger change name from apikey to jwt token in pop up		[done]
+
+
+
+use pipe reader to read files
+see how environment variables are handled
+change file upload and request paths so they are different
+add validation to submissionfileDTO
+file.ContentType is not a safe check. it only checks the file extension
+check whether Id is updated on AddAsync (savechanges) in the service class 	[okay i looked it up it does]
+uploading an exe file prevents upload in the first place. why
+
+handle exeption when file is stored but metadata is not stored.
+
+
+submission id validation on post?
+submission id return on post
+validation of url in submission
+resubmission status validation - check based on taskassignment id or trainee id - implement in submission service
+uploaded by user name use user id, extract it from jwt
+check empty file upload validation
+
+You should not commit the secrets to your github repo like jwt key, database connection string, redis configs, etc. Since anyone that has access to your repo gets all the secrets and can access your resources. Also if any malicious script is pushed to your repo, then it can read your code and and also read the credentials pushed to your repo.
+[Priority] Please update the README.md file as per the current status of the project, once you join
+
+
+look into different cache policies - how read and write will work in different cache policies, and cahce levels and how they are useful and how they are used in web apps
+utc time stamp vs date time offset
+put does not need get unless condition check needed; how caching would work for patch operations. best strats
+mysql direct use more
+
+where to use try catch - repo or service on db call. (use error code or database call for validation? and how to present it to user)
+redis - delete whole cache endpoint; also shift put and delete redis functions before db call and fail db operation when redis call is failed
+solid principles
+
+
+
+git branch <name>: Creates a new branch at your current commit.
+git switch <name>: Switches your workspace to the specified branch.
+git switch -c <name>: Creates a new branch and immediately switches to it.
+git branch: Lists all local branches in your repository.
+git branch -d <name>: Deletes a branch
