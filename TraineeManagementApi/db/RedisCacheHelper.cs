@@ -9,23 +9,23 @@ public class RedisCacheHelper
     //     // User = "",
     //     Password = ""
     // };
-    // private static ConnectionMultiplexer redis = ConnectionMultiplexer.Connect(conf);
-
+    private static ConnectionMultiplexer redis;
     private static IDatabase db;
+    private static readonly object _lock = new object();
 
     public static void Initialize(IConfiguration configuration)
     {
-        if (_redis != null) return; // Prevent double initialization
+        if (redis != null) return; // Prevent double initialization
 
         lock (_lock)
         {
-            if (_redis != null) return;
+            if (redis != null) return;
 
             var connectionString = configuration.GetConnectionString("RedisConnection") 
                 ?? throw new InvalidOperationException("Connections String: 'Redis connection string not found'");
 
-            _redis = ConnectionMultiplexer.Connect(connectionString);
-            db = _redis.GetDatabase();
+            redis = ConnectionMultiplexer.Connect(connectionString);
+            db = redis.GetDatabase();
         }
     }
 

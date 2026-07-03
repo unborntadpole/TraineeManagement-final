@@ -72,7 +72,7 @@ services:
       - JwtConfig__Issuer=${JWT_ISSUER}
       - JwtConfig__Audience=${JWT_AUDIENCE}
       - JwtConfig__TokenValidityMins=${TOKENVALIDITYMINS}
-      - ConnectionStrings__RedisConnection=redis:${REDIS_INTERNAL_PORT},username=${REDIS_USER},password=${REDIS_USER_PASSWORD}
+      - ConnectionStrings__RedisConnection=redis:${REDIS_INTERNAL_PORT},password=${REDIS_ROOT_PASSWORD}
       - ConnectionStrings__RabbitMqURI=amqp://${RABBITMQ_DEFAULT_USER}:${RABBITMQ_DEFAULT_PASS}@rabbitmq:${RABBITMQ_APP_PORT_VIRTUAL}
       - ConnectionStrings__DefaultConnection=server=mysql-db;port=${MYSQL_PORT_INTERNAL};database=${MYSQL_DATABASE};user=root;password=${MYSQL_ROOT_PASSWORD};
     depends_on:
