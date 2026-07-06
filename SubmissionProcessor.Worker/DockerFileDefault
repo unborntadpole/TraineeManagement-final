@@ -1,0 +1,21 @@
+FROM mcr.microsoft.com/dotnet/sdk:10.0 as build-env
+WORKDIR /AppCode
+
+COPY ./SubmissionProcessor.Worker/ ./SubmissionProcessor.Worker/
+COPY ./TraineeManagementApi/ ./TraineeManagementApi/
+
+WORKDIR /AppCode/SubmissionProcessor.Worker
+
+RUN dotnet restore
+
+RUN dotnet publish -c Release -o out --no-restore
+
+FROM mcr.microsoft.com/dotnet/aspnet:10.0 as runtime
+WORKDIR /App
+
+COPY --from=build-env /AppCode/SubmissionProcessor.Worker/out .
+
+COPY ./SubmissionProcessor.Worker/appsettings.example.json ./
+RUN cp appsettings.example.json appsettings.json
+
+ENTRYPOINT ["dotnet", "SubmissionProcessor.Worker.dll"]

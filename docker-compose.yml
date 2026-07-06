@@ -1,6 +1,6 @@
 services:
   redis:
-    image: docker-registry-002.zeuslearning.com/zeuslearning/redis
+    image: ${REDIS_IMAGE_LINK}redis
     container_name: redis_container
     restart: always
     ports:
@@ -13,7 +13,7 @@ services:
       - app-network
 
   mysql-db:
-    image: docker-registry-002.zeuslearning.com/zeuslearning/mysql
+    image: ${MYSQL_IMAGE_LINK}mysql
     container_name: mysql-container
     restart: always
     environment:
@@ -29,7 +29,7 @@ services:
       - app-network
 
   rabbitmq:
-    image: docker-registry-002.zeuslearning.com/zeuslearning/rabbitmq
+    image: ${RABBITMQ_IMAGE_LINK}rabbitmq
     container_name: rabbitmq
     hostname: rabbitmq-server
     restart: unless-stopped
@@ -56,7 +56,7 @@ services:
   traineemanagement-api:
     build:
       context: .
-      dockerfile: TraineeManagementApi/DockerFile
+      dockerfile: TraineeManagementApi/DockerFile${HOME_ENVIRONMENT}
       args:
         DOMAIN_OWNER: ${DOMAIN_OWNER}
         NUGET_REPO_NAME: ${NUGET_REPO_NAME}
@@ -87,7 +87,7 @@ services:
   trainingdirectory-api:
     build:
       context: .
-      dockerfile: TrainingDirectory.Api/DockerFile
+      dockerfile: TrainingDirectory.Api/DockerFile${HOME_ENVIRONMENT}
       args:
         DOMAIN_OWNER: ${DOMAIN_OWNER}
         NUGET_REPO_NAME: ${NUGET_REPO_NAME}
@@ -105,7 +105,7 @@ services:
   workerservice:
     build:
       context: .
-      dockerfile: SubmissionProcessor.Worker/DockerFile
+      dockerfile: SubmissionProcessor.Worker/DockerFile${HOME_ENVIRONMENT}
       args:
         DOMAIN_OWNER: ${DOMAIN_OWNER}
         NUGET_REPO_NAME: ${NUGET_REPO_NAME}

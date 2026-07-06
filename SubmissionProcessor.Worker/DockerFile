@@ -26,9 +26,6 @@ RUN dotnet nuget update source ${NUGET_REPO_NAME} -u "aws" -p "${CODEARTIFACT_AU
 
 RUN dotnet restore --configfile /AppCode/nuget.config
 
-RUN rm -rf ./TraineeManagementApi/appsettings*.json
-RUN rm -rf ./AppCode/TraineeManagementApi/appsettings*.json
-
 RUN dotnet publish -c Release -o out --no-restore
 
 # Uses runtime image instead of aspnet since it is a worker service
