@@ -37,7 +37,7 @@ public class RabbitMQProducer
             durable: true,
             exclusive: false, 
             autoDelete: false, 
-            arguments: null);
+            arguments: queueArguments);
 
         await channel.QueueBindAsync(
             queue: queue, 

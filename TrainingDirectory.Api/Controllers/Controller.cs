@@ -19,10 +19,10 @@ public class TraineeController : ControllerBase
         new Trainee(){FirstName="Jay Prakash",LastName="Yadav",Email="jayprakash.yadav@zeuslearning.com",TechStack="HTML,CSS",Status="Active"}
     ];
 
-    [HttpGet]
-    public async Task<IActionResult> Get()
+    [HttpGet("{id}")]
+    public async Task<IActionResult> Get([FromRoute] string id)
     {
-        _logger.LogInformation("Api called at {timestamp}", DateTime.UtcNow);
+        _logger.LogInformation("Api called at {timestamp}, with correlation id {id}", DateTime.UtcNow, id);
         return Ok(trainees);
     }
 }

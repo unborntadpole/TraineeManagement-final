@@ -497,6 +497,19 @@ public class ApplicationDbContext : DbContext
                 UpdatedDate = DateTime.ParseExact("2026-06-17 06:49:02.830616", format, CultureInfo.InvariantCulture),
             }
         );
+        
+        modelBuilder.Entity<TaskAssignment>().HasData(
+            
+            new TaskAssignment
+            {
+                Id = 1,
+                TraineeId = 1,
+                MentorId = 1,
+                DueDate = DateTime.ParseExact("2026-06-20 06:54:02.743000", format, CultureInfo.InvariantCulture),
+                Status = "Assigned",
+                AssignedDate = DateTime.ParseExact("2026-06-17 06:56:08.624395", format, CultureInfo.InvariantCulture),
+            }
+        );
     }
 }
 

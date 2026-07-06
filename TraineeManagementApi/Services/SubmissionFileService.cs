@@ -95,6 +95,7 @@ public class SubmissionFileService
             catch (Exception ex)
             {
                 _logger.LogError(ex, $"Broker down. Failed to queue message with correlationId: {payload.CorrelationId}");
+                // rollback database here
                 return Result<PostFileResponse>.ServerError("Persistence succeeded but worker queue unavailable. Please retry later.", 500);
             }
             try

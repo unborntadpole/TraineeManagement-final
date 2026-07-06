@@ -54,6 +54,14 @@ where to use try catch - repo or service on db call. (use error code or database
 redis - delete whole cache endpoint; also shift put and delete redis functions before db call and fail db operation when redis call is failed
 solid principles
 
+record difference in time in cacheing and db operation
+see how rabbitmq handles no acknowledgement from the worker either positive or negative
+how to handle message publish failure when db operation has already happened
+chec for queue config for max retry attempts for failed messages
+aws sqs, kafka -> look into this
+try out dead lettter queue manually
+
+
 
 
 git branch <name>: Creates a new branch at your current commit.

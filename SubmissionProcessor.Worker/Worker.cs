@@ -9,6 +9,7 @@ using RabbitMQ.Client.Events;
 using SubmissionProcessor.Worker.db;
 using SubmissionProcessor.Worker.Services;
 using SubmissionProcessor.Worker.DTO;
+using SubmissionProcessor.Worker.Models;
 using System;
 using System.IO;
 using System.Security.Cryptography;
@@ -77,7 +78,7 @@ public class TaskConsumerWorker : BackgroundService
             durable: true,
             exclusive: false, 
             autoDelete: false, 
-            arguments: null);
+            arguments: queueArguments);
 
         await _channel.QueueBindAsync(
             queue: queue, 
@@ -105,8 +106,9 @@ public class TaskConsumerWorker : BackgroundService
                 if (job == null)
                 {
                     _logger.LogWarning($"Processing job with correlation id {correlationId} not found. Adding new job to the database.");
-                    await processingJobsRepository.PostByIdAsync(correlationId);
-                    job = await processingJobsRepository.GetByIdAsync(correlationId);
+                    job = await processingJobsRepository.PostByIdAsync(correlationId); // returning the object 
+                    // job = await processingJobsRepository.GetByIdAsync(correlationId);
+                    // job = new ProcessingJobDTO(new ProcessingJob(correlationId));
                 }
                 else if (job.Status == "Completed")
                 {
@@ -125,7 +127,7 @@ public class TaskConsumerWorker : BackgroundService
                 await ProcessingStatusAndIncrementAsync(correlationId, processingJobsRepository, stoppingToken);
                 _logger.LogInformation("Processing item: {Message}", message);
 
-                await ValidateCheckSum(content, submissionFileRepository, fileStorageService, stoppingToken);
+                await ValidateCheckSum(content, submissionFileRepository, fileStorageService, correlationId, stoppingToken);
 
                 await _channel.BasicAckAsync(deliveryTag: ea.DeliveryTag, multiple: false, cancellationToken: stoppingToken);
                 await processingJobsRepository.SetStatusById(correlationId, "Completed");
@@ -134,11 +136,11 @@ public class TaskConsumerWorker : BackgroundService
             }
             catch (Exception ex)
             { 
-                if (correlationId == "Unknown")
-                {
-                    try { correlationId = JsonSerializer.Deserialize<SubmissionProcessingRequested>(message)?.CorrelationId.ToString() ?? "Unknown"; } 
-                    catch { }
-                }
+                // if (correlationId == "Unknown")
+                // {
+                //     try { correlationId = JsonSerializer.Deserialize<SubmissionProcessingRequested>(message)?.CorrelationId.ToString() ?? "Unknown"; } 
+                //     catch { }
+                // }
 
                 bool isTransient = IsErrorTransient(ex);
                 
@@ -168,6 +170,7 @@ public class TaskConsumerWorker : BackgroundService
         SubmissionProcessingRequested data,
         SubmissionFileRepository submissionFileRepository,
         IFileStorageService fileStorageService,
+        string corrId,
         // HttpClient _client,
         CancellationToken ct
     )
@@ -194,7 +197,7 @@ public class TaskConsumerWorker : BackgroundService
             }
             _logger.LogInformation($"Checksum for file with id {fileMetadata.Id} is correctly stored.");
 
-            using var response = await _client.GetAsync("api/trainee", ct);
+            using var response = await _client.GetAsync($"api/trainee/{corrId}", ct);
             if (response.IsSuccessStatusCode)
                 {
                     string content = await response.Content.ReadAsStringAsync(ct);
@@ -220,9 +223,9 @@ public class TaskConsumerWorker : BackgroundService
             
             System.Data.Common.DbException dbEx when dbEx.Message.Contains("timeout", StringComparison.OrdinalIgnoreCase) => true,
 
-            InvalidDataException => false,
-            FileNotFoundException => false,
-            OperationCanceledException => false,
+            // InvalidDataException => false,
+            // FileNotFoundException => false,
+            // OperationCanceledException => false,
             _ => false
         };
     }
@@ -231,13 +234,13 @@ public class TaskConsumerWorker : BackgroundService
     {
         try
         {
-            await repo.SetStatusById(correlationId, "Processing");
-            await repo.IncrementAttemptById(correlationId);
+            await repo.SetStatusById(correlationId, "Processing"); 
+            await repo.IncrementAttemptById(correlationId); 
         }
         catch (Exception e)
         {
             _logger.LogWarning($"Error in getting file: {e}");
-            throw new HttpRequestException($"Storage engine failure accessing data payload: {e.Message}");
+            throw new HttpRequestException($"Storage engine failure accessing data payload: {e.Message}"); // change exception error
         }
     }
 

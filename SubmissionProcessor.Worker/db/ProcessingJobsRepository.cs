@@ -29,11 +29,12 @@ public class ProcessingJobsRepository
         await _context.SaveChangesAsync();
     }
 
-    public async Task PostByIdAsync(string corrId)
+    public async Task<ProcessingJobDTO> PostByIdAsync(string corrId)
     {
         ProcessingJob job = new ProcessingJob(corrId);
         await _context.ProcessingJobs.AddAsync(job);
         await _context.SaveChangesAsync();
+        return new ProcessingJobDTO(job);
     }
 
     public async Task<bool> SetStatusById(string id, string status)
