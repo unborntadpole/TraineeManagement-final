@@ -9,7 +9,6 @@ using RabbitMQ.Client.Events;
 using SubmissionProcessor.Worker.db;
 using SubmissionProcessor.Worker.Services;
 using SubmissionProcessor.Worker.DTO;
-using SubmissionProcessor.Worker.Models;
 using System;
 using System.IO;
 using System.Security.Cryptography;
@@ -101,7 +100,7 @@ public class TaskConsumerWorker : BackgroundService
             {
                 
                 var content = JsonSerializer.Deserialize<SubmissionProcessingRequested>(message);
-                correlationId = content.CorrelationId.ToString();
+                correlationId = content!.CorrelationId.ToString();
                 var job = await processingJobsRepository.GetByIdAsync(correlationId);
                 if (job == null)
                 {
