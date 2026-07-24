@@ -61,6 +61,7 @@ chec for queue config for max retry attempts for failed messages
 aws sqs, kafka -> look into this
 try out dead lettter queue manually
 
+add services and traineedirectory health check in traineemanagement controller
 
 
 
